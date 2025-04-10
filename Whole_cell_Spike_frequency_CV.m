@@ -1,10 +1,9 @@
-%20210414 for AP freq influenced by EX-STIM by DSX
 clear all;clc
 
 fid=dir('*.mat');%filename
 load('dt.mat');
 
-%%-----Adjust if needed----
+%%-----Adjust if needed----%%
 freq=130;
 num=1300;
 baserange=10;
@@ -12,7 +11,7 @@ postime=20;
 binwidth=1;
 pick=[6,11,16,21,26];
 xlstitle='Result_APtime_1301300';%filename
-%---------------------
+%---------------------%%
 Recordfilename=[];
 Record_basepeakFreq=zeros(length(fid),1);
 Record_intrapeakFreq=zeros(length(fid),1);
@@ -53,7 +52,7 @@ baseCVidx=instantFreq(1:(length(basepeak)-1));
 intraCVidx=instantFreq(((length(basepeak)+1):(length(basepeak)+length(intrapeak)-1)));
 postCVidx=instantFreq(((length(basepeak)+length(intrapeak)+1):end));
 
-%% Bin-based jitter calculation (1 second bin)
+%% Bin-based jitter calculation (1 second bin)%%
 bininstantFreq=[];
 for i=1:(baserange+postime)
 binAPidx=find(peakpeak<i&peakpeak>(i-1));
