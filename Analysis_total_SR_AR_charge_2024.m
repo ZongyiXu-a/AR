@@ -1,10 +1,9 @@
-% 2024-01-03 modified by DSX,specific for charge analysis
 clear all;clc;close all;
  
 fid=dir('*.mat');%filename
 load('dt.mat');
 load('*.mat');%filename
-%% ------------Adjust if needed---------------
+%% ------------Adjust if needed---------------%%
 freq=130;
 num=3900;
 xlstitle='Result_charge_alphaall_2024_1303900';%filename
@@ -18,7 +17,7 @@ binPsec=1;
 burstidx=(pretime/binPsec+1):1:(pretime+durtime)/binPsec;
 stimonset=pretime/bin10bin+1;%Adjust according to pretime and durtime
 
-%% ------------Adjust if needed----------------
+%% ------------Adjust if needed----------------%%
 timewindow=0.02;%Alpha fit window (s)
 stiwindow=1/freq;%ISI
 stimlatency=0.0011;%remove artifact
