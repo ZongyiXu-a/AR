@@ -1,10 +1,9 @@
-% 20210414 for AP freq influenced by EX-STIM by DSX
 clear all; clc
 
 fid=dir('*.mat');%filename
 load('dt.mat');
 
-%%-----Adjust if needed----
+%%-----Adjust if needed----%%
 freq=130;
 num=1300;
 baserange=10;
@@ -13,7 +12,7 @@ binwidth=1;
 stimlatency=0.003; % remove artifact
 pick=[6,11,16,21,26];
 xlstitle='Result_APtime_1301300';%filename
-%---------------------
+%---------------------%%
 Recordfilename=[];
 Record_basepeakFreq=zeros(length(fid),1);
 Record_intrapeakFreq=zeros(length(fid),1);
@@ -36,7 +35,7 @@ for k=1:length(fid)
     baseline=data_act(1:fix(baserange/dtI));
     basemean=mean(baseline);
 
-    %% Remove artifact
+    %% Remove artifact%%
     artifactidx=zeros(length(sti),fix(stimlatency/dtI));
     artifactidx(:,1)=fix(sti/dtI);
     for a=2:size(artifactidx,2)
@@ -46,13 +45,13 @@ for k=1:length(fid)
     current_removeA(artifactidx)=basemean;  % Replace artifact with baseline
     time=(1:length(current_removeA))*dtI;   % Time vector
 
-    %% Peak detection on the artifact-removed signal
+    %% Peak detection on the artifact-removed signal%%
     peaktime=peakfinder(current_removeA, -40, -20, -1, 0) * dtV; % peakfinder on cleaned data
     peaktimereal=diff(peaktime) > 0.0003;
     peakpeak=peaktime(peaktimereal);
     peaktimeplot_idx=fix(peakpeak / dtV);  % Find peak indices
 
-    % Split the peaks into different categories
+    %%Split the peaks into different categories%%
     basepeakidx=find(peakpeak < baserange);
     basepeak=peakpeak(basepeakidx);
     postpeakidx=find(peakpeak > baserange + 1 / freq * num);
@@ -60,7 +59,7 @@ for k=1:length(fid)
     intrapeakidx=find(peakpeak >= baserange & peakpeak < (baserange + 1 / freq * num));
     intrapeak=peakpeak(intrapeakidx);
 
-    %% Calculate instant frequency
+    %% Calculate instant frequency%%
     instantFreq=[];
     for i=2:length(peakpeak)
         ISI=peakpeak(i) - peakpeak(i - 1);   
@@ -71,7 +70,7 @@ for k=1:length(fid)
     intraCVidx=instantFreq(((length(basepeak) + 1):(length(basepeak) + length(intrapeak) - 1)));
     postCVidx=instantFreq(((length(basepeak) + length(intrapeak) + 1):end));
 
-    %% Bin-based jitter calculation (1 second bin)
+    %% Bin-based jitter calculation (1 second bin)%%
     bininstantFreq=[];
     for i=1:(baserange + postime)
         binAPidx=find(peakpeak < i & peakpeak > (i - 1));
@@ -92,7 +91,7 @@ for k=1:length(fid)
         bininstantFreq=[];
     end
 
-    %% Frequency computation for specified bins
+    %% Frequency computation for specified bins%%
     binFreq=[];
     for i=1:length(pick)
         APidx=find(peakpeak < (pick(i) + 4) & peakpeak > pick(i));
@@ -111,14 +110,14 @@ for k=1:length(fid)
         binFreq=[];
     end
 
-    %% Plotting the results
+    %% Plotting the results%%
     figure(1), clf;
     set(gcf, 'position', [200, 100, 800, 400]);
 
     time_V=(1:length(data_actV)) * dtV;  % Time vector for data_actV
     time_stim=(1:length(data_act)) * dtI;  % Time vector for original data
 
-    % Instant Frequency and CV Plot
+    % Instant Frequency and CV Plot%%
     h1=subplot(311);
     title(filename); axis tight; hold on;
     yyaxis left
@@ -128,20 +127,20 @@ for k=1:length(fid)
     plot(0.5:1:30, Record_binCV);
     ylabel('instantFreq CV/s')
 
-    % Data signal plot with detected peaks
+    % Data signal plot with detected peaks%%
     h2=subplot(312);
     axis tight; hold on;
     plot(time_V, current_removeA, 'color', [220, 20, 60] / 255);  % Plot artifact-removed signal
     plot(time_V(peaktimeplot_idx), current_removeA(peaktimeplot_idx), 'o', 'markerfacecolor', [60, 176, 106] / 255);
 
-    % Stimulus plot
+    % Stimulus plot%%
     h3=subplot(313);
     axis tight; hold on;
     plot(time_stim, data_actV, 'color', [220, 20, 60] / 255);
 
     pause;
 
-    %% Frequency statistics
+    %% Frequency statistics%%
     basepeaknum=length(basepeak);
     basepeakFreq=basepeaknum / baserange;
     postpeaknum=length(postpeak);
@@ -152,7 +151,7 @@ for k=1:length(fid)
     intraCV=std(intraCVidx)/mean(intraCVidx);
     postCV=std(intraCVidx)/mean(intraCVidx);
 
-    %% Storing results for output
+    %% Storing results for output%%
     Recordfilename{k, 1}=filename;
     Record_basepeakFreq(k, 1)=basepeakFreq;
     Record_intrapeakFreq(k, 1)=intrapeakFreq;
@@ -166,7 +165,7 @@ for k=1:length(fid)
     Record_CVCV(k, :)=Record_CV;
 end
 
-%% Write results to Excel
+%% Write results to Excel%%
 xlswrite(xlstitle, {'Name', 'basepeakFreq', 'intrapeakFreq', 'postpeakFreq', 'baseCV', 'intraCV', 'postCV', 'binCV'}, 'para', 'A1');
 xlswrite(xlstitle, Recordfilename, 'para', 'A2');
 xlswrite(xlstitle, Record_basepeakFreq, 'para', 'B2');
