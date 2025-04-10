@@ -1,9 +1,8 @@
-% 2024-01-03 modified by DSX,specific for SR alpha fitting
 clear all;clc;close all;
 load('dt.mat');
 fid=dir('*.mat');%filename
 
-%% ------------Adjust if needed----------------
+%% ------------Adjust if needed----------------%%
 pretime=20;
 durtion=30;
 stimlatency=0.0011;%remove artifact
